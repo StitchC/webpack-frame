@@ -7,15 +7,16 @@ const pages = require('../config/pages.config.js');
 module.exports = {
    entry: pages.entries(),
    output: {
-     filename: 'static/js/[name].js',
-     path: path.resolve(__dirname, '../dist'), // 生成文件的根目录 必须使用绝对路径
+     filename: 'static/js/[name].[hash].js',
+     path: path.resolve(__dirname, './dist'), // 生成文件的根目录 必须使用绝对路径
+     chunkFilename: '[name].chunk.js',
      publicPath: './'    // 针对浏览器端访问资源的路径 对应cdn 或 服务器上的资源路径
    },
    plugins: [
      ...pages.htmlPlugin(),
-     new CleanWebpackPlugin(['dist']),
+     new CleanWebpackPlugin(['../dist']),
      new ExtractTextPlugin({
-       filename: 'static/css/[name][id].css'
+       filename: 'static/css/[name].[hash].css'
      })
    ],
    module: {
@@ -32,17 +33,23 @@ module.exports = {
          use: {
            loader: 'file-loader',
            options: {
-             name: 'static/images/[name].[ext]',
-             publicPath: './'
+             name: 'static/images/[name].[ext]'
            }
          }
        },
        {
-         test: /\.scss/,
+         test: /\.scss$/,
          use: ExtractTextPlugin.extract({
            fallback: 'style-loader',
            use: ['css-loader', 'sass-loader']
          })
+       },
+       {
+         test: /\.js$/,
+         use: {
+           loader: 'babel-loader'
+         },
+         exclude: /node_modules/
        }
      ]
    },

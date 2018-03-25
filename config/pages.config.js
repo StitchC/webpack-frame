@@ -18,9 +18,7 @@ exports.entries = function() {
   let map = {};
   // 遍历filePath 这个数组将结果保存在map 这个对象中
   entryFiles.forEach((filePath) => {
-    console.log(filePath);
-    console.log(__dirname);
-    
+
     let filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'));
     map[filename] = filePath
   });
