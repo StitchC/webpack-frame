@@ -2,5 +2,6 @@ body{
   background: url('../images/p1.jpg');
   a{
     color: #666;
+    transition: transform .4s;
   }
 }
