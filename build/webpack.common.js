@@ -35,13 +35,7 @@ const commonConfig = env => {
     {
       loader: 'style-loader',
       options: {
-        sourceMap: true
-      }
-    },
-    {
-      loader: 'css-loader',
-      options: {
-        sourceMap: true
+        sourceMap: env === 'dev'
       }
     },
     {
@@ -57,7 +51,7 @@ const commonConfig = env => {
     {
       loader: 'sass-loader',
       options: {
-        sourceMap: true
+        sourceMap: env === 'dev'
       }
     }
   ]
@@ -66,13 +60,29 @@ const commonConfig = env => {
   const styleLoader = env === 'prod'
                               ? ExtractTextSass.extract({
                                 fallback: 'style-loader',
-                                use: cssLoaders
+                                use: cssLoaders.slice(1)  // 因为第一个loader 是style-loader 但是在use 里面不能用styleloader 所以要用slice 将数组第一项移除
                               })
-                              : [
-                                {
-                                  loader: 'style-loader'
+                              : [].concat(cssLoaders)
+
+
+
+
+  // 根据不同环境 配置file-loader
+  const fileLoaders = env === 'dev'
+                              ? [{
+                                loader: 'file-loader',
+                                options: {
+                                  outputPath: 'static/images/',
+                                  limit: 5000
                                 }
-                              ].concat(cssLoaders)
+                              }]
+                              : [{
+                                  loader: 'url-loader',
+                                  options: {
+                                    outputPath: 'static/images/',
+                                    limit: 5000
+                                  }
+                                }]
 
 
   return {
@@ -86,6 +96,8 @@ const commonConfig = env => {
     plugins: [
       ...pages.htmlPlugin(),
 
+      ExtractTextSass,
+
       new CleanWebpackPlugin(['dist'], {
         root: path.resolve(__dirname, '../')
       }),
@@ -96,50 +108,28 @@ const commonConfig = env => {
         // $ : 'jquery'
         // webpack 会根据 'jquery' 这个值找到jquery 的模块
         // 然后在项目中调用 $(...) 就能够执行jquery 的方法了
+        $: 'jquery'
       })
     ],
     module: {
       rules: [
         {
-          test: /\.css$/,
-          use: [
-            'style-loader',
-            'css-loader'
-          ]
-        },
-        {
           test: /\.(png|jpg|jpeg|gif|svg)$/,
-          use: [
-              {
-              loader: 'url-loader',
-              options: {
-                outputPath: 'static/images/',
-                limit: 5000
-              }
-            },
-            {
-              loader: 'img-loader',
-              options: {
-                pngquant: {
-                  quality: 80
-                }
-              }
-            }
-          ]
+          use: fileLoaders.concat(env === 'prod'
+                                            ? [{
+                                                loader: 'img-loader',
+                                                options: {
+                                                  pngquant: {
+                                                    quality: 80
+                                                  }
+                                                 }
+                                            }]
+                                            : []
+                                  )
         },
         {
           test: /\.(eot|woff|woff2|ttf|svg)$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                outputPath: 'static/fonts',
-                publicPath: '',
-                useRelativePath: true,
-                limit: 5000
-              }
-            }
-          ]
+          use: fileLoaders
         },
         {
           test: /\.scss$/,
@@ -166,13 +156,13 @@ const commonConfig = env => {
     resolve: {
         extensions: ['.js', '.json', '.css'],
         alias: {
-        // 模块别名列表
-        'style': path.resolve(__dirname, '../src/style'),
+          // 模块别名列表
+          'style': path.resolve(__dirname, '../src/style'),
 
-        'module': path.resolve(__dirname, '../src/module')
+          'module': path.resolve(__dirname, '../src/module'),
 
-        // 在别名后加上＄ 表示通过这个名字找到对应的目录文件而不是目录
-
+          // 在别名后加上＄ 表示通过这个名字找到对应的目录文件而不是目录
+          // 'jquery.min$': path.resolve(__dirname, '../src/module/libs')
         }
       }
     }

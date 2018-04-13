@@ -4,17 +4,13 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const htmlWebpakInlinePlugin = require('html-webpack-inline-chunk-plugin')
 
-const glob = require('glob-all')
-const common = require('./webpack.common.js')
+// const glob = require('glob-all')
+// const common = require('./webpack.common.js')
 
 
- module.exports = merge(common, {
+ module.exports =  {
    devtool: 'source-map',
    plugins: [
-     // 提取css 到一个独立文件
-     new ExtractTextPlugin({
-      filename: 'static/css/[name].[hash].css'
-    }),
 
      // webpack 内置的DefinePlugin
      new webpack.DefinePlugin({
@@ -42,6 +38,9 @@ const common = require('./webpack.common.js')
      // 减少请求数量
     new htmlWebpakInlinePlugin({
       inlineChunks: ['manifest']
-    })
+    }),
+
+    // treeShaking 压缩丑化js 代码
+    new UglifyJSPlugin()
    ]
- });
+ }
