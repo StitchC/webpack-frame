@@ -7,6 +7,9 @@ module.exports = {
     env: {
         browser: true
     },
+    globals: {
+      '$': false
+    },
     rules: {
         'indent': ['warn', 4],
         // allow paren-less arrow functions

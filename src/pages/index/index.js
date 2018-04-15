@@ -1,5 +1,7 @@
 import 'babel-polyfill'
+import 'style/icon.scss'
 import 'style/main.scss'
+
 import output from 'module/output'
 
 

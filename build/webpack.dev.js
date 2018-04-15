@@ -1,10 +1,8 @@
-const merge = require('webpack-merge')
-const common = require('./webpack.common.js')
 const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const proxy = require('../config/proxy.js');
-const historyFallBack = require('../config/historyFallBack.js');
+
+const proxy = require('../config/proxy.js')
+const historyFallBack = require('../config/historyFallBack.js')
 
  module.exports = {
    devtool: 'cheap-module-source-map',

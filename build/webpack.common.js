@@ -39,6 +39,12 @@ const commonConfig = env => {
       }
     },
     {
+      loader: 'css-loader',
+      options: {
+        sourceMap: env === 'dev'
+      }
+    },
+    {
       loader: 'postcss-loader',
       options: {
         sourceMap: env === 'dev',
@@ -159,7 +165,7 @@ const commonConfig = env => {
           // 模块别名列表
           'style': path.resolve(__dirname, '../src/style'),
 
-          'module': path.resolve(__dirname, '../src/module'),
+          'module': path.resolve(__dirname, '../src/module')
 
           // 在别名后加上＄ 表示通过这个名字找到对应的目录文件而不是目录
           // 'jquery.min$': path.resolve(__dirname, '../src/module/libs')
@@ -172,6 +178,7 @@ const commonConfig = env => {
     let config = env === 'prod'
     ? prodConfig
     : devConfig
+
 
     return merge(commonConfig(env), config)
  }
