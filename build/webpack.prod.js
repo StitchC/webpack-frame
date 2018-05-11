@@ -10,7 +10,89 @@ const htmlWebpakInlinePlugin = require('html-webpack-inline-chunk-plugin')
 
  module.exports =  {
    devtool: 'source-map',
+   module: {
+     rules: [
+       {
+         test: /\.scss$/,
+         use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: false
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                sourceMap: false,
+                ident: 'postcss',
+                plugins: [
+                    require('postcss-cssnext')()
+                ]
+              }
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: false
+              }
+            }
+           ]
+        })
+       },
+
+       {
+         test: /\.js$/,
+         use: [
+          {
+            loader: 'babel-loader'
+          }
+         ],
+         exclude: /node_modules/
+       },
+
+       {
+        test: /\.(png|jpg|jpeg|gif|svg)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 1000,
+              outputPath: 'static/images/'
+            }
+          },
+          {
+            loader: 'img-loader',
+            options: {
+              pngquant: {
+                quality: 80
+              }
+             }
+          }
+        ]
+      },
+
+      {
+        test: /\.(eot|woff|woff2|ttf|svg)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 1000,
+              outputPath: 'static/fonts/'
+            }
+          }
+        ]
+      }
+     ]
+   },
    plugins: [
+     // 提取css 文件插件
+     new ExtractTextPlugin({
+       filename: 'static/css/[name][hash:5].css'
+     }),
 
      // webpack 内置的DefinePlugin
      new webpack.DefinePlugin({
