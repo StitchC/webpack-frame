@@ -62,6 +62,7 @@ const commonConfig = {
     ? prodConfig
     : devConfig
 
+    console.log(process.env.NODE_ENV)
 
     return merge(commonConfig, config)
  }

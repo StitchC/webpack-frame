@@ -1,4 +1,5 @@
 const webpack = require('webpack')
+const FriendlyErrorPlugin = require('friendly-errors-webpack-plugin')
 
 
 const proxy = require('../config/proxy.js')
@@ -13,6 +14,7 @@ const historyFallBack = require('../config/historyFallBack.js')
       contentBase: '../dist',
       historyApiFallback: historyFallBack,
       proxy: proxy,
+      quiet: true,
       overlay: {
         errors: true
       }
@@ -100,6 +102,8 @@ const historyFallBack = require('../config/historyFallBack.js')
      // 模块热更新
      new webpack.HotModuleReplacementPlugin(),
      // 控制台输出热更新文件的相对路径
-     new webpack.NamedModulesPlugin()
+     new webpack.NamedModulesPlugin(),
+     new webpack.NoEmitOnErrorsPlugin(),
+     new FriendlyErrorPlugin()
    ]
  }

@@ -3,9 +3,6 @@ module.exports = {
     '/': {
         target: 'https://www.163.com',
         changeOrigin: true,
-        logLevel: 'debug',
-        pathRewrite: {
-            '^/': ''
-        }
+        logLevel: 'debug'
     }
 }

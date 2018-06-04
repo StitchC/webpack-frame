@@ -22,6 +22,12 @@ function hi() {
   console.log('test hot update')
 }
 
+function sayHello() {
+  console.log('hello')
+  console.log('haha')
+}
+
 
 hi()
-// output();
+sayHello()
+
